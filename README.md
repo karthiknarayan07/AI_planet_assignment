@@ -1,5 +1,7 @@
 Detailed Documentation of code:-
 
+**have limitations in hosting, vercel dont allow to save file upload as it provides only read access to file system, kindly run local copy of the project to test hackathon creation features.
+
 Note = {
 
     -> Avoid AI_planet_application it only has html files and views,
@@ -10,8 +12,8 @@ Note = {
  
 default credintials:-
 
-username = admin
-password = admin
+user 1:- [ username = admin, password = admin ]
+user 2:- [ username = admin2, password = admin ]
 
 
 API specifications and End points:-

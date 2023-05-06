@@ -22,8 +22,9 @@
             <div class="d-flex">
                 {% if request.user.is_authenticated %}
                 <button class="btn btn-danger" onclick='location.href = "{% url 'logout' %}";' >Logout</button>
-                {% else %} 
-                <button class="btn btn-success" onclick='location.href = "{% url 'login' %}";' >Login</button>
+                {% else %}
+                <button class="btn btn-primary m-2" onclick='location.href = "{% url 'register' %}";' >Register</button>
+                <button class="btn btn-success m-2" onclick='location.href = "{% url 'login' %}";' >Login</button>
                 {% endif %}
             </div>
             <div>
