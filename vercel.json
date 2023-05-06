@@ -1,0 +1,15 @@
+{
+    "version":2,
+    "builds": [{
+            "src": "AI_planet/wsgi.py",
+            "use": "@vercel/python",
+            "config": { "maxLambdaSize": "15mb", "runtime":"python3.9" }
+    }],
+
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "AI_planet/wsgi.py"
+        }
+    ]
+}

@@ -75,14 +75,26 @@ TEMPLATES = [
 WSGI_APPLICATION = 'AI_planet.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+# uncomment this to use local database
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+#cloud database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'railway',
+       'URL':'postgresql://postgres:hDEER6ydPUliRUM3D264@containers-us-west-163.railway.app:6664/railway',
+       'USER': 'postgres',
+       'PASSWORD': 'hDEER6ydPUliRUM3D264',
+       'HOST': 'containers-us-west-163.railway.app',
+       'PORT': '6664',
+   }
 }
 
 
