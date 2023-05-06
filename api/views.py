@@ -57,12 +57,13 @@ def availableHackathons(request,filterParam):
 def viewApplyHackathons(request,action_name,hackathon_id):
     
     if request.method == "GET":
+        
         if action_name == "view":
             item = Hackathon.objects.get(hackathon_id=hackathon_id)
             hackathon = HackathonSerializer(item)
             return Response(hackathon.data)
         
-        if action_name == "my_hackathons":
+        if action_name == "submissions":
 
             myHackathon = Hackathon.objects.get(hackathon_id=hackathon_id,created_by=request.user)
             myHackathonSubmissions = Submission.objects.filter(hackathon=myHackathon,is_submitted=True)

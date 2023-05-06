@@ -51,7 +51,7 @@
         fetchMyHackathon("{{hackathon_id}}")
 
         async function fetchMyHackathonSubmissions(hackathon_id) {
-            const response = await fetch("/api/hackathon/my_hackathons/"+hackathon_id,{
+            const response = await fetch("/api/hackathon/submissions/"+hackathon_id,{
                 method:"GET",
                 credentials:'same-origin'
             })
