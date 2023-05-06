@@ -1,0 +1,46 @@
+1. create dockerfile:
+# Use an official Python runtime as a parent image
+FROM python:3.8-slim-buster
+
+# Set the working directory to /app
+WORKDIR /
+
+# Copy the current directory contents into the container at /app
+COPY . /
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
+
+# Expose port 8000 for the Django app
+EXPOSE 8000
+
+# Run the command to start the Django app
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+2.build image:
+docker build -t djangodocker
+
+3. Run docker:
+docker run -p 8000:8000 my-django-app
+
+4. Save docker image container:
+docker save imageName -o outputFileName.tar
+
+5. Load docker in new machine:
+docker load -i outputFileName.tar
+
+6. Delete docker images:
+docker images
+docker rmi -f imageID
+
+7. Stop docker container:
+ docker stop containerID
+
+8. resume docker:
+docker start containerID
+
+9. to delete permanently:
+docker kill containerID (stop container and kill)
+
+10. 
+

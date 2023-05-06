@@ -1,0 +1,196 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+<style>
+    .home-container{
+        display: grid;
+        grid-template-columns: 2fr 2fr 2fr;
+    }
+</style>
+<button onclick='createHackathon()' class="btn btn-primary m-4">Create Hackathon</button>
+<h4 class="p-4">Welcome to AI Planet,</h4>
+
+
+
+<div class="home-container m-4 ">
+    <div class="enrolledHackathons m-2 border border-secondary" id="enrolledHackathons">
+        <h3>Enrolled Hackathons</h3>
+        <table class="table table-primary table-striped p-2 table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Reward</th>
+                    <th>Participate</th>
+                </tr>
+            </thead>
+            <tbody id="enrolledHackathonsTbody">
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="availableHackathons m-2 border border-secondary" id="availableHackathons">
+        <h3>Available Hackathons</h3>
+        <table class="table table-success table-striped p-2 table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Reward</th>
+                    <th>Participate</th>
+                </tr>
+            </thead>
+            <tbody id="availableHackathonsTbody">
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="submittedHackathons m-2 border border-secondary" id="submittedHackathons">
+        <h3>Submitted Hackathons</h3>
+        <table class="table table-success table-striped p-2 table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Reward</th>
+                </tr>
+            </thead>
+            <tbody id="submittedHackathonsTbody">
+                
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <div class="myHackathons m-2 border border-secondary" id="myHackathons">
+        <h3>My Hackathons</h3>
+        <table class="table table-success table-striped p-2 table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="myHackathonsBody">
+                
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+<script>
+    async function availableHackathons() {
+        const response = await fetch("/api/hackathons/available",{
+            method:"GET",
+            credentials:'same-origin'
+        })
+        const hackathons = await response.json();
+        var tableBody="";
+
+        for(var i=0;i<hackathons.length;i++){
+            tableBody += `<tr>
+                            <td>${hackathons[i].hackathon_id}</td>
+                            <td>${hackathons[i].title}</td>
+                            <td>${hackathons[i].start_datetime}</td>
+                            <td>${hackathons[i].end_datetime}</td>
+                            <td>${hackathons[i].reward_prize}</td>
+                            <td><button onclick='viewHackathon("${hackathons[i].hackathon_id}")' class="btn btn-primary">Enroll</button></td
+                        </tr>`
+        }
+        document.getElementById("availableHackathonsTbody").innerHTML=tableBody
+    }
+
+    async function submittedHackathons() {
+        const response = await fetch("/api/hackathons/submitted",{
+            method:"GET",
+            credentials:'same-origin'
+        })
+        const hackathons = await response.json();
+        var tableBody="";
+
+        for(var i=0;i<hackathons.length;i++){
+            tableBody += `<tr>
+                            <td>${hackathons[i].hackathon_id}</td>
+                            <td>${hackathons[i].title}</td>
+                            <td>${hackathons[i].reward_prize}</td>
+                        </tr>`
+        }
+        document.getElementById("submittedHackathonsTbody").innerHTML=tableBody
+    }
+
+    async function enrolledHackathons() {
+        const response = await fetch("/api/hackathons/enrolled",{
+            method:"GET",
+            credentials:'same-origin'
+        })
+        const hackathons = await response.json();
+        var tableBody="";
+
+        for(var i=0;i<hackathons.length;i++){
+            tableBody += `<tr>
+                            <td>${hackathons[i].hackathon_id}</td>
+                            <td>${hackathons[i].title}</td>
+                            <td>${hackathons[i].start_datetime}</td>
+                            <td>${hackathons[i].end_datetime}</td>
+                            <td>${hackathons[i].reward_prize}</td>
+                            <td><button onclick='submitHackathon("${hackathons[i].hackathon_id}")' class="btn btn-primary">View/Submit</button></td
+                        </tr>`
+        }
+        document.getElementById("enrolledHackathonsTbody").innerHTML=tableBody
+    }
+
+    async function myHackathons() {
+        const response = await fetch("/api/hackathons/my_hackathons",{
+            method:"GET",
+            credentials:'same-origin'
+        })
+        const hackathons = await response.json();
+        var tableBody="";
+
+        for(var i=0;i<hackathons.length;i++){
+            tableBody += `<tr onclick='viewMyHackathon('${hackathons[i].hackathon_id}')'>
+                            <td>${hackathons[i].hackathon_id}</td>
+                            <td>${hackathons[i].title}</td>
+                            <td><button onclick='viewMyHackathon("${hackathons[i].hackathon_id}")' class="btn btn-primary">View Submissions</button></td>
+                        </tr>`
+        }
+        document.getElementById("myHackathonsBody").innerHTML=tableBody
+    }
+
+    
+
+    function viewHackathon(hackathon_id){
+        location.href="/hackathon/"+hackathon_id
+    }
+    function submitHackathon(hackathon_id){
+        location.href="/hackathon/submit/"+hackathon_id
+    }
+
+    function createHackathon(){
+        location.href="/create"
+    }
+
+    function viewMyHackathon(hackathon_id){
+        location.href="/my_hackathons/"+hackathon_id
+    }
+
+
+    availableHackathons()
+    enrolledHackathons()
+    submittedHackathons()
+    myHackathons()
+    
+</script>
+
+{% endblock content %}

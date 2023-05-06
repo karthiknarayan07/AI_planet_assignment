@@ -1,0 +1,115 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+    <style>
+        .title-container {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+
+
+    <div class="m-4">
+        <h3>Hackathon Details</h3><hr>
+        <div class="title-container mb-4" id="hackathon_title_div">
+            
+        </div>
+
+        <div id="hackathon_body_div">
+            
+        </div>
+    </div>
+
+    <script>
+
+        async function fetchHackathon(hackathon_id) {
+            const response = await fetch("/api/hackathon/view/"+hackathon_id,{
+                method:"GET",
+                credentials:'same-origin'
+            })
+            const hackathon = await response.json();
+            var titleHtml = `<img src="${hackathon.hackathon_image}" height="50px" alt="hackathon_logo"><h4 class="m-2">${hackathon.title}</h4>
+                            <h6 class="m-2">Start date:-${hackathon.start_datetime} and End date:- ${hackathon.end_datetime}</h6>
+                            <br>`
+            document.getElementById("hackathon_title_div").innerHTML=titleHtml
+
+            var bodyHtml =  `
+                            <p>${hackathon.description}</p><br>
+                            <h6> Submission Type:- ${hackathon.submission_type}</h6>
+                            <img src="${hackathon.background_image}" height="250px" alt="background_image" class="mb-4"><br>
+
+                            
+                        `
+            if(hackathon.submission_type == "file"){
+                bodyHtml += `
+                            <form method="post" id="submissionForm" enctype="multipart/form-data">
+                                <label for="submissionTitle">submission Title</label>
+                                <input type="text" name="submissionTitle" id="submissionTitle">
+                                <label for="submissionSummary">submission Summary</label>
+                                <textarea id="submissionSummary" name="submissionSummary"></textarea>
+                                <label for="submissionFile">Submission File</label>
+                                <input type="file" id="file" name="file" >
+                                <input type="hidden" name="typeOfSubmission" value="file">
+                            </form>
+                            <button class="btn btn-success ml-4" onclick="submitHackathon('${hackathon.hackathon_id}')">Submit</button>
+                            `
+            }
+            if(hackathon.submission_type == "image"){
+                bodyHtml += `
+                            <form method="post" id="submissionForm" enctype="multipart/form-data">
+                                <label for="submissionTitle">submission Title</label>
+                                <input type="text" name="submissionTitle" id="submissionTitle">
+                                <label for="submissionSummary">submission Summary</label>
+                                <textarea id="submissionSummary" name="submissionSummary"></textarea>
+                                <label for="submissionFile">Submission File</label>
+                                <input type="file" id="image" name="image" accept="image/png, image/jpeg">
+                                <input type="hidden" name="typeOfSubmission" value="image">
+                            </form>
+                            <button class="btn btn-success ml-4" onclick="submitHackathon('${hackathon.hackathon_id}')">Submit</button>
+                            `
+            }
+            if(hackathon.submission_type == "link"){
+                bodyHtml += `
+                            <form method="post" id="submissionForm" enctype="multipart/form-data">
+                                <label for="submissionTitle">submission Title</label>
+                                <input type="text" name="submissionTitle" id="submissionTitle">
+                                <label for="submissionSummary">submission Summary</label>
+                                <textarea id="submissionSummary" name="submissionSummary"></textarea>
+                                <label for="submissionFile">Submission File</label>
+                                <input type="text" id="link" name="link" placeholder="Enter your Link">
+                                <input type="hidden" name="typeOfSubmission" value="link">
+                            </form>
+                            <button class="btn btn-success ml-4" onclick="submitHackathon('${hackathon.hackathon_id}')">Submit</button>
+                            `
+            }
+
+
+
+            document.getElementById('hackathon_body_div').innerHTML=bodyHtml
+        }
+
+        fetchHackathon("{{hackathon_id}}")
+
+
+
+        async function submitHackathon(hackathon_id){
+            var form = document.getElementById('submissionForm')
+            var formdata = new FormData(form)
+            const response = await fetch("/api/hackathon/submit/"+hackathon_id,{
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                method:"POST",
+                credentials:'same-origin',
+                body:formdata
+            })
+            const result = await response.json();
+            alert(result.status)
+            window.location.href="/"
+        }
+
+        
+
+    </script>
+{% endblock content %}

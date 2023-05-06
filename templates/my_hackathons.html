@@ -1,0 +1,77 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+    <style>
+        .title-container {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+
+
+    <div class="m-4">
+        <h3>Hackathon Details</h3>
+
+        <div id="hackathon_details" class="title-container">
+
+        </div>
+        <hr>
+
+        <h3>submitted users</h3>
+        <table class="table table-success table-striped p-2 table-hover">
+            <thead>
+                <tr>
+                    <th>Submission_ID</th>
+                    <th>Submission Title</th>
+                    <th>Summary</th>
+                    <th>Submitted By</th>
+                </tr>
+            </thead>
+            <tbody id="submittedHackathonsTbody">
+                
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+
+        async function fetchMyHackathon(hackathon_id) {
+            const response = await fetch("/api/hackathon/view/"+hackathon_id,{
+                method:"GET",
+                credentials:'same-origin'
+            })
+            const hackathon = await response.json();
+            var titleHtml = `<img src="${hackathon.hackathon_image}" height="50px" alt="hackathon_logo"><h4 class="m-2">${hackathon.title}</h4>
+                            <h6 class="m-2">Start date:-${hackathon.start_datetime} and End date:- ${hackathon.end_datetime}</h6>
+                            <br>`
+            document.getElementById("hackathon_details").innerHTML=titleHtml
+
+        }
+        fetchMyHackathon("{{hackathon_id}}")
+
+        async function fetchMyHackathonSubmissions(hackathon_id) {
+            const response = await fetch("/api/hackathon/my_hackathons/"+hackathon_id,{
+                method:"GET",
+                credentials:'same-origin'
+            })
+            const submissions = await response.json();
+            console.log(submissions)
+            var tableBody="";
+
+            for(var i=0;i<submissions.length;i++){
+                tableBody += `<tr>
+                                <td>${submissions[i].submission_id}</td>
+                                <td>${submissions[i].submission_title}</td>
+                                <td>${submissions[i].summary}</td>
+                                <td>${submissions[i].submitted_by}</td>
+                            </tr>`
+            }
+            document.getElementById("submittedHackathonsTbody").innerHTML=tableBody
+        }
+
+        
+        fetchMyHackathonSubmissions("{{hackathon_id}}")
+
+    </script>
+{% endblock content %}

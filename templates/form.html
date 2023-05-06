@@ -1,0 +1,43 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+    <style>
+        
+    </style>
+
+
+    <div class="m-4">
+        <h3>Create Hackathon</h3><hr>
+        <div class="title-container mb-4" id="hackathonForm">
+
+            <form method="post" id="createHackathonForm" enctype="multipart/form-data">
+                {{ form.as_p }}
+            </form>
+            <button class="btn btn-success" onclick="createHackathon()">Create</button>
+            
+
+        </div>
+
+    </div>
+
+    <script>
+
+        async function createHackathon(){
+            var form = document.getElementById('createHackathonForm');
+            var formdata = new FormData(form)
+            const response = await fetch("/api/hackathons/create",{
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                method:"POST",
+                credentials:'same-origin',
+                body:formdata
+            })
+            const result = await response.json();
+            alert(result.status)
+            window.location.href = '/';
+        }
+
+    </script>
+{% endblock content %}

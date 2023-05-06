@@ -1,0 +1,68 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+    <style>
+        .title-container {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+
+
+    <div class="m-4">
+        <h3>Hackathon Details</h3><hr>
+        <div class="title-container mb-4" id="hackathon_title_div">
+            
+        </div>
+
+        <div id="hackathon_body_div">
+            
+
+        </div>
+    </div>
+
+    <script>
+
+        async function fetchHackathon(hackathon_id) {
+            const response = await fetch("/api/hackathon/view/"+hackathon_id,{
+                method:"GET",
+                credentials:'same-origin'
+            })
+            const hackathon = await response.json();
+            var titleHtml = `<img src="${hackathon.hackathon_image}" height="50px" alt="hackathon_logo"><h4 class="m-2">${hackathon.title}</h4>
+                            <h6 class="m-2">Start date:-${hackathon.start_datetime} and End date:- ${hackathon.end_datetime}</h6>
+                            <br>`
+            document.getElementById("hackathon_title_div").innerHTML=titleHtml
+
+            var bodyHtml =  `
+                        <p>${hackathon.description}</p><br>
+                        <h6> Submission Type:- ${hackathon.submission_type}</h6>
+                        <img src="${hackathon.background_image}" height="250px" alt="background_image">
+                        <button class="btn btn-success ml-4" onclick="enrollHackathon('${hackathon.hackathon_id}')">Enroll</button>
+                        `
+            document.getElementById('hackathon_body_div').innerHTML=bodyHtml
+        }
+
+        async function enrollHackathon(hackathon_id){
+            var data={
+                    "hackathon_id":"{{hackathon_id}}",
+            }
+            const response = await fetch("/api/hackathon/enroll/"+hackathon_id,{
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                method:"POST",
+                credentials:'same-origin',
+                body:JSON.stringify(data)
+            })
+            const result = await response.json();
+            alert(result.status)
+            window.location.href = '/';
+        }
+
+        fetchHackathon("{{hackathon_id}}")
+
+    </script>
+{% endblock content %}
