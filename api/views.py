@@ -2,8 +2,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from AI_planet_application.models import Hackathon,Submission
-from .serializers import HackathonSerializer,SubmissionSerializer
+from AI_planet_application.models import Hackathon,Submission,User
+from .serializers import HackathonSerializer,SubmissionSerializer,UserSerializer
 
 from AI_planet_application.forms import HackathonForm
 
@@ -30,6 +30,7 @@ def availableHackathons(request,filterParam):
             hackathons_with_submission = Hackathon.objects.filter(submission__in=user_submissions)
             hackathonsData = HackathonSerializer(hackathons_with_submission,many=True)
             return Response(hackathonsData.data)
+            
         
         if filterParam == "my_hackathons":
             hackathons = Hackathon.objects.filter(created_by=request.user)
@@ -106,3 +107,18 @@ def viewApplyHackathons(request,action_name,hackathon_id):
         
     return Response({"status":"unknown error"})
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def usersList(request,user_filter):
+
+    if user_filter == "enrolledInAtLeastOneHackathon":
+        enrolledUsers = User.objects.filter(submission__isnull=False).distinct()
+        enrolledUsersData = UserSerializer(enrolledUsers,many=True)
+        return Response(enrolledUsersData.data)
+    
+    if user_filter == 'notEnrolledInAtLeastOneHackathon':
+        notEnrolledUsers = User.objects.exclude(submission__isnull=False)
+        notEnrolledUsersData = UserSerializer(notEnrolledUsers,many=True)
+        return Response(notEnrolledUsersData.data)
+    return Response({'status':'error with your query please check API docs'})

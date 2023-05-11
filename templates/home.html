@@ -68,7 +68,7 @@
         </table>
     </div>
 
-    <br>
+    
     <div class="myHackathons m-2 border border-secondary" id="myHackathons">
         <h3>My Hackathons</h3>
         <table class="table table-success table-striped p-2 table-hover">
@@ -80,6 +80,36 @@
                 </tr>
             </thead>
             <tbody id="myHackathonsBody">
+                
+            </tbody>
+        </table>
+    </div>
+
+    <div class="enrolledUsers m-2 border border-secondary">
+        <h3>Enrolled Users</h3>
+        <table class="table table-success table-striped p-2 table-hover">
+            <thead>
+                <tr>
+                    <th>username</th>
+                    <th>email</th>
+                </tr>
+            </thead>
+            <tbody id="enrolledUsersTbody">
+                
+            </tbody>
+        </table>
+    </div>
+
+    <div class="notEnrolledUsers m-2 border border-secondary">
+        <h3>Not Enrolled Users</h3>
+        <table class="table table-success table-striped p-2 table-hover">
+            <thead>
+                <tr>
+                    <th>username</th>
+                    <th>email</th>
+                </tr>
+            </thead>
+            <tbody id="notEnrolledUsersTbody">
                 
             </tbody>
         </table>
@@ -168,6 +198,40 @@
         document.getElementById("myHackathonsBody").innerHTML=tableBody
     }
 
+    async function enrolledUsers() {
+        const response = await fetch("/api/users/enrolledInAtLeastOneHackathon",{
+            method:"GET",
+            credentials:'same-origin'
+        })
+        const users = await response.json();
+        var tableBody="";
+
+        for(var i=0;i<users.length;i++){
+            tableBody += `<tr>
+                            <td>${users[i].username}</td>
+                            <td>${users[i].email}</td>
+                        </tr>`
+        }
+        document.getElementById("enrolledUsersTbody").innerHTML=tableBody
+    }
+
+    async function notEnrolledUsers() {
+        const response = await fetch("/api/users/notEnrolledInAtLeastOneHackathon",{
+            method:"GET",
+            credentials:'same-origin'
+        })
+        const users = await response.json();
+        var tableBody="";
+
+        for(var i=0;i<users.length;i++){
+            tableBody += `<tr>
+                            <td>${users[i].username}</td>
+                            <td>${users[i].email}</td>
+                        </tr>`
+        }
+        document.getElementById("notEnrolledUsersTbody").innerHTML=tableBody
+    }
+
     
 
     function viewHackathon(hackathon_id){
@@ -190,6 +254,8 @@
     enrolledHackathons()
     submittedHackathons()
     myHackathons()
+    enrolledUsers()
+    notEnrolledUsers()
     
 </script>
 

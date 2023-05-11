@@ -18,6 +18,14 @@ user 2:- [ username = admin2, password = admin ]
 
 API specifications and End points:-
 
+0. http://127.0.0.1:8000/api/users/<str:user_filter>
+
+    A. If user_filter == "enrolledInAtLeastOneHackathon"
+        -> List all the users who have enrolled at least in one hackathon
+
+    A. If user_filter == "notEnrolledInAtLeastOneHackathon"
+        -> List all the users who have not enrolled in any hackathon
+
 1. http://127.0.0.1:8000/api/hackathons/<str:filterParam>
 
     A. If filterParam == "available"
